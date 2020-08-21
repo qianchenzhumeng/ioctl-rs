@@ -1,6 +1,6 @@
 # ioctl_list
 
-This directory contains a C++ program called `ioctl_list`, which will output Rust definitions for
+This directory contains a C program called `ioctl_list`, which will output Rust definitions for
 any ioctls found on the current system.
 
 ## Adding a New Platform
@@ -9,8 +9,8 @@ To add support for a new platform, one should generate ioctl definitions for the
 the `ioctl_list` program. The `ioctl_list` program must be run on the target platform. Start by
 building `ioctl_list`:
 
-```sh
-./autogen.sh && ./configure && make
+```
+gcc -o ioctl_list main.c
 ```
 
 After `ioctl_list` is built, run it:
@@ -42,13 +42,3 @@ Save the output to a file named after the target platform in `src/os` and correc
 incorrect. Import any types needed from `libc` at the top of the new file. Next, add `mod` and `use`
 declarations in `src/os/mod.rs` and `src/lib.rs` with an appropriate `#[cfg(...)]` guard. Consult
 the existing implementations as reference.
-
-## Adding a New IOCTL
-
-Adding a new ioctl requires editing `ioctl_list` to generate the appropriate definition. If the
-ioctl requires including a header that isn't currently included, add an appropriate
-`AC_CHECK_HEADERS()` call to `configure.ac` and include the header with a matching `#ifdef` guard.
-Add any new ioctls to `src/main.cc` with appropriate `#ifdef` guards.
-
-With the new ioctls added, compile and run `ioctl_list` for each supported platform. For each
-platform, copy the new constants to the appropriate source file.
